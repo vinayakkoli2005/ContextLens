@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "ContextChat",
+  "version": "0.1.0",
+  "description": "Context-bound AI chat threads for document reading",
+  "permissions": ["activeTab", "sidePanel", "storage", "scripting"],
+  "background": {
+    "service_worker": "src/background/service-worker.ts",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "src/sidepanel/index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/index.ts"],
+      "css": ["src/content/styles.css"]
+    }
+  ],
+  "icons": {
+    "128": "src/assets/icon-128.png"
+  },
+  "action": {
+    "default_title": "ContextChat"
+  }
+}

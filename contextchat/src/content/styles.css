@@ -1,0 +1,8 @@
+/* ContextChat Content Script Styles */
+/* Will be populated in Step 6 */
+
+.contextchat-highlight {
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
