@@ -1,39 +1,58 @@
-// ======================================
-// ContextChat — Message Passing System
-// Will be fully implemented in Step 3
-// ======================================
-
+// src/shared/messaging.ts
 import { ExtensionMessage, MessageType } from './types';
+
+type MessageHandler = (payload: any, sender: chrome.runtime.MessageSender) => Promise<any> | any;
+
+const handlers = new Map<MessageType, MessageHandler>();
 
 /**
  * Send a message to the service worker and wait for a response.
- * Placeholder — full implementation in Step 3.
+ * Use from content scripts and side panel.
  */
 export async function sendMessage<T = any>(
   type: MessageType,
-  payload: any
+  payload: any = {}
 ): Promise<T> {
-  const response = await chrome.runtime.sendMessage({ type, payload });
+  const response = await chrome.runtime.sendMessage({ type, payload } as ExtensionMessage);
   if (response?.error) throw new Error(response.error);
   return response;
 }
 
 /**
- * Initialize the message listener.
- * Placeholder — full implementation in Step 3.
- */
-export function initMessageListener(): void {
-  // Will be implemented in Step 3
-  console.log('[ContextChat] Message listener placeholder initialized');
-}
-
-/**
  * Register a handler for a specific message type.
- * Placeholder — full implementation in Step 3.
+ * Use in the service worker to handle incoming messages.
  */
 export function onMessage(
   type: MessageType,
-  handler: (payload: any, sender: chrome.runtime.MessageSender) => Promise<any> | any
+  handler: MessageHandler
 ): void {
-  // Will be implemented in Step 3
+  handlers.set(type, handler);
+}
+
+/**
+ * Initialize the message listener — call once in the service worker.
+ * Routes incoming messages to registered handlers.
+ */
+export function initMessageListener(): void {
+  chrome.runtime.onMessage.addListener(
+    (message: ExtensionMessage, sender, sendResponse) => {
+      const handler = handlers.get(message.type);
+      if (!handler) {
+        sendResponse({ error: `No handler for message type: ${message.type}` });
+        return false;
+      }
+
+      // Handle async responses
+      const result = handler(message.payload, sender);
+      if (result instanceof Promise) {
+        result
+          .then((data) => sendResponse(data))
+          .catch((err) => sendResponse({ error: err.message }));
+        return true; // keep the message channel open for async
+      }
+
+      sendResponse(result);
+      return false;
+    }
+  );
 }

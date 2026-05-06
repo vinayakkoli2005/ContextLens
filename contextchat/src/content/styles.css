@@ -1,8 +1,9 @@
-/* ContextChat Content Script Styles */
-/* Will be populated in Step 6 */
+/* ContextChat - Host page styles (minimal) */
+/* All component styles live inside Shadow DOM - see shadow-host.ts */
 
-.contextchat-highlight {
-  cursor: pointer;
-  border-radius: 2px;
-  transition: background-color 0.2s ease;
+#contextchat-root {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 2147483647 !important;
 }

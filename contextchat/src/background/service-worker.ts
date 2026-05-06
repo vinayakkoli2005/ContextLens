@@ -1,7 +1,6 @@
-// ======================================
-// ContextChat — Service Worker (Background Script)
-// Will be fully implemented in Steps 7-9
-// ======================================
+// src/background/service-worker.ts
+import { initMessageListener } from '../shared/messaging';
+import { registerHandlers } from './message-handler';
 
 console.log('[ContextChat] Service worker started');
 
@@ -9,5 +8,6 @@ console.log('[ContextChat] Service worker started');
 chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
   .catch((error) => console.error('[ContextChat] Side panel setup error:', error));
 
-// Placeholder — full message handling implemented in Step 7
-// AI integration implemented in Steps 8-9
+// Initialize message routing and register all handlers
+registerHandlers();
+initMessageListener();
