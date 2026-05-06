@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Claude / AI assistant generated files
+docs/superpowers/
+.superpowers/
+.claude/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
